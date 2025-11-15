@@ -1749,9 +1749,9 @@ addfile(const char *realfile, struct stat *st,
 	} else if (fmttype & TYP_BAR) {
 		int	c, n = 0;
 		pad = 512;
-		sprintf(bc.Bdr.b_mode, "%7.7o",(int)st->st_mode&(07777|S_IFMT));
-		sprintf(bc.Bdr.b_uid, "%7.7lo", (long)st->st_uid);
-		sprintf(bc.Bdr.b_gid, "%7.7lo", (long)st->st_gid);
+		snprintf(bc.Bdr.b_mode, 8, "%7.7o",(int)st->st_mode&(07777|S_IFMT));
+		snprintf(bc.Bdr.b_uid, 8, "%7.7lo", (long)st->st_uid);
+		snprintf(bc.Bdr.b_gid, 8, "%7.7lo", (long)st->st_gid);
 		sprintf(bc.Bdr.b_size, "%11.11llo",
 				(st->st_mode&S_IFMT) == S_IFREG && !zerolink ?
 				(long long)st->st_size&077777777777LL : 0LL);
@@ -1856,9 +1856,9 @@ addfile(const char *realfile, struct stat *st,
 		}
 		if (fmttype & TYP_USTAR) {
 			if (fmttype == FMT_GNUTAR)
-				strcpy(bc.Tdr.t_magic, mag_gnutar);
+				memcpy(bc.Tdr.t_magic, mag_gnutar, 8);
 			else {
-				strcpy(bc.Tdr.t_magic, mag_ustar);
+				memcpy(bc.Tdr.t_magic, mag_ustar, 6);
 				bc.Tdr.t_version[0] = bc.Tdr.t_version[1] = '0';
 			}
 			if ((cp = getuser(st->st_uid)) != NULL)
@@ -2574,7 +2574,7 @@ sum(int fd, const char *fn, struct stat *sp, char *tg)
 		return 1;
 	}
 	c = tg[8];
-	sprintf(tg, "%08lx", (long)sum);
+	snprintf(tg, 9, "%08lx", (long)sum);
 	tg[8] = c;
 	return 0;
 }
