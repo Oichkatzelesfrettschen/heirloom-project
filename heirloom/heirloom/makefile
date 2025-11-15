@@ -1,4 +1,5 @@
-SHELL = /sbin/sh
+# Auto-detect shell: try bash first, then sh
+SHELL := $(shell command -v bash 2>/dev/null || command -v sh 2>/dev/null || echo /bin/sh)
 
 SUBDIRS = build libwchar libcommon libuxre _install \
 	banner basename bc bdiff bfs \

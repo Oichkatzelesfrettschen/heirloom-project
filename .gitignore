@@ -1,0 +1,33 @@
+# Build artifacts
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+core
+log
+
+# Generated Makefiles
+heirloom/heirloom/Makefile
+heirloom/heirloom/*/Makefile
+heirloom/heirloom-*/Makefile
+
+# Generated executables (generally in tool directories)
+heirloom/heirloom/_install/install_ucb
+heirloom/heirloom/banner/banner
+heirloom/heirloom/basename/basename*
+heirloom/heirloom/bc/bc
+heirloom/heirloom/cpio/cpio
+heirloom/heirloom/cpio/pax*
+
+# Build scripts
+heirloom/heirloom/build/crossln
+heirloom/heirloom/build/genintro
+heirloom/heirloom/build/maninst
+
+# Backup files
+*.original
+*~
+
+# Build output directory
+_build/

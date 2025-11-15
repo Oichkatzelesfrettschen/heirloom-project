@@ -101,7 +101,12 @@ static const char sccsid[] USED = "@(#)tar.sl	1.180 (gritter) 10/9/10";
 #endif
 
 #if !defined (major) && !defined (__G__)
+/* Modern glibc requires sysmacros.h; Solaris uses mkdev.h */
+#if defined(__linux__) || defined(__GLIBC__)
+#include <sys/sysmacros.h>
+#else
 #include <sys/mkdev.h>
+#endif
 #endif	/* !major */
 
 #include <getdir.h>

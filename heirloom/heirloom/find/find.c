@@ -84,7 +84,12 @@ static const char sccsid[] USED = "@(#)find.sl	1.45 (gritter) 5/8/06";
 #include <sys/sysmacros.h>
 #endif
 #ifndef	major
+/* Modern glibc requires sysmacros.h; Solaris uses mkdev.h */
+#if defined(__linux__) || defined(__GLIBC__)
+#include <sys/sysmacros.h>
+#else
 #include <sys/mkdev.h>
+#endif
 #endif
 #if __NetBSD_Version__>= 300000000
 #include <sys/statvfs.h>

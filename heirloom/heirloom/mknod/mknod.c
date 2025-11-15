@@ -47,7 +47,12 @@ static const char sccsid[] USED = "@(#)mknod.sl	1.9 (gritter) 12/16/07";
 #include	<limits.h>
 #include	<unistd.h>
 #ifndef	major
+/* Modern glibc requires sysmacros.h; Solaris uses mkdev.h */
+#if defined(__linux__) || defined(__GLIBC__)
+#include <sys/sysmacros.h>
+#else
 #include	<sys/mkdev.h>
+#endif
 #endif	/* !major */
 
 #ifndef	S_IFNAM
