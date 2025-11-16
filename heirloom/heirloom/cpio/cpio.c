@@ -1005,16 +1005,16 @@ main(int argc, char **argv)
 	flags(argc, argv);
 	switch (action) {
 	case 'i':
-		if (sigset(SIGINT, SIG_IGN) != SIG_IGN)
-			sigset(SIGINT, onint);
+		if (signal(SIGINT, SIG_IGN) != SIG_IGN)
+			signal(SIGINT, onint);
 		doinp();
 		break;
 	case 'o':
 		dooutp();
 		break;
 	case 'p':
-		if (sigset(SIGINT, SIG_IGN) != SIG_IGN)
-			sigset(SIGINT, onint);
+		if (signal(SIGINT, SIG_IGN) != SIG_IGN)
+			signal(SIGINT, onint);
 		dopass(argv[optind]);
 		break;
 	}
@@ -2203,7 +2203,7 @@ void *
 srealloc(void *m, size_t n)
 {
 	if ((m = realloc(m, n)) == NULL) {
-		write(2, "Out of memory.\n", 15);
+		(void)write(2, "Out of memory.\n", 15);
 		_exit(sysv3 ? 2 : 3);
 	}
 	return m;
@@ -2221,7 +2221,7 @@ scalloc(size_t nmemb, size_t size)
 	void	*vp;
 
 	if ((vp = calloc(nmemb, size)) == NULL) {
-		write(2, "Out of memory.\n", 15);
+		(void)write(2, "Out of memory.\n", 15);
 		_exit(sysv3 ? 2 : 3);
 	}
 	return vp;
@@ -2237,7 +2237,7 @@ svalloc(size_t n, int force)
 		if ((pagesize = sysconf(_SC_PAGESIZE)) < 0)
 			pagesize = 4096;
 	if ((vp = memalign(pagesize, n)) == NULL && force) {
-		write(2, "Out of memory.\n", 15);
+		(void)write(2, "Out of memory.\n", 15);
 		_exit(sysv3 ? 2 : 3);
 	}
 	return vp;
@@ -2356,11 +2356,11 @@ prdot(int flush)
 	static int	column;
 
 	if (flush && column != 0 || column >= 50) {
-		write(action == 'o' && !Oflag ? 2 : 1, "\n", 1);
+		(void)write(action == 'o' && !Oflag ? 2 : 1, "\n", 1);
 		column = 0;
 	}
 	if (!flush) {
-		write(action == 'o' && !Oflag ? 2 : 1, ".", 1);
+		(void)write(action == 'o' && !Oflag ? 2 : 1, ".", 1);
 		column++;
 	}
 }
@@ -5531,7 +5531,7 @@ zcreat(const char *name, mode_t mode)
 	}
 	close(pd[0]);
 	close(fd);
-	sigset(SIGPIPE, SIG_IGN);
+	signal(SIGPIPE, SIG_IGN);
 	return pd[1];
 }
 
@@ -6156,7 +6156,7 @@ zipwtemp(int fd, const char *fn, struct stat *st, union bincpio *bp, size_t sz,
 				if ((rd = read(fd, ibuf, sizeof ibuf)) <= 0) {
 					emsg(3, "Cannot read \"%s\"", fn);
 					close(fd);
-					ftruncate(tf, 0);
+					(void)ftruncate(tf, 0);
 					return -1;
 				}
 				z.next_in = (unsigned char *)ibuf;
@@ -6201,7 +6201,7 @@ zipwtemp(int fd, const char *fn, struct stat *st, union bincpio *bp, size_t sz,
 				if ((rd = read(fd, ibuf, sizeof ibuf)) <= 0) {
 					emsg(3, "Cannot read \"%s\"", fn);
 					close(fd);
-					ftruncate(tf, 0);
+					(void)ftruncate(tf, 0);
 					return -1;
 				}
 				bs.next_in = ibuf;
@@ -6270,7 +6270,7 @@ out:	if (tf >= 0 && cuse >= 0 && *csize < st->st_size) {
 		emsg(3, "Cannot rewind \"%s\"", sname);
 		errcnt++;
 		close(fd);
-		ftruncate(tf, 0);
+		(void)ftruncate(tf, 0);
 		return -1;
 	}
 	le32p(*crc, bp->Zdr.z_crc32);
@@ -6300,7 +6300,7 @@ out:	if (tf >= 0 && cuse >= 0 && *csize < st->st_size) {
 		bwrite(ibuf, rd);
 		size -= rd;
 	}
-	ftruncate(tf, 0);
+	(void)ftruncate(tf, 0);
 	close(fd);
 	return 0;
 }
