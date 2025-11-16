@@ -52,9 +52,29 @@ static const char sccsid[] USED = "@(#)file_sus.sl	1.33 (gritter) 4/14/06";
 static const char sccsid[] USED = "@(#)file.sl	1.33 (gritter) 4/14/06";
 #endif	/* !SUS */
 
-#include <sys/sysmacros.h> // For major/minor on modern Linux
+/*
+ * Platform-specific header handling for major/minor macros.
+ * Modern glibc (2.25+) requires explicit sysmacros.h include to avoid
+ * namespace pollution. Include it early, then verify macro availability.
+ */
+#if defined(__GLIBC__) || defined(__linux__)
+#include <sys/sysmacros.h>
+#endif
+
 #include "iblok.h"
 #include "asciitype.h"
+
+/*
+ * Defensive fallback: If major macro still not defined after local headers,
+ * try platform-specific includes. This handles edge cases and non-glibc systems.
+ */
+#ifndef major
+#if defined(__linux__) || defined(__GLIBC__)
+#include <sys/sysmacros.h>
+#else
+#include <sys/mkdev.h>	/* Solaris and other Unix systems */
+#endif
+#endif	/* !major */
 #ifndef	S_IFDOOR
 #define	S_IFDOOR	0xD000		/* Solaris door */
 #endif

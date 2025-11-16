@@ -97,15 +97,28 @@
 #include <sys/sysmacros.h>
 #endif	/* _AIX */
 
-#ifdef __linux__
-#include <sys/sysmacros.h> // For major/minor on modern Linux
-#endif
-#if !defined (major) && !defined (__G__)
+/*
+ * Modern glibc (Linux) requires explicit include of sysmacros.h for major/minor macros.
+ * This became mandatory in glibc 2.25+ to avoid namespace pollution.
+ */
+#if defined(__linux__) || defined(__GLIBC__)
+#include <sys/sysmacros.h>
+#elif !defined(major) && !defined(__G__)
+/* Fallback for Solaris and other Unix systems */
 #include <sys/mkdev.h>
-#endif	/* !major */
+#endif	/* major/mkdev resolution */
 
 #include "cpio.h"
 #include "blast.h"
+
+/*
+ * GCC 10+ compatibility: Define global variables once in this file.
+ * GCC 10 changed default from -fcommon to -fno-common, requiring
+ * explicit definitions rather than tentative definitions.
+ */
+fmttype_t fmttype = FMT_NONE;
+enum pax_type pax = PAX_TYPE_CPIO;
+enum pax_preserve_type pax_preserve = PAX_P_NONE;
 
 #ifdef	__GLIBC__
 #ifdef	_IO_putc_unlocked

@@ -72,6 +72,10 @@ typedef enum {
 	FMT_ZIP		= 01000000	/* zip format */
 } fmttype_t;
 
+/*
+ * GCC 10+ compatibility: Declare as extern in header, define in one .c file.
+ * The -fno-common default in GCC 10+ requires explicit extern declarations.
+ */
 extern fmttype_t fmttype;
 
 /*
@@ -112,18 +116,17 @@ struct	file {
 	uint32_t	f_chksum;	/* checksum */
 	int		f_pad;		/* padding size */
 	int		f_fd;		/* file descriptor (for pass mode) */
-enum cmethod	f_cmethod;	/* zip compression method */
-enum fg_flags {
-	FG_CRYPT	= 0001,	/* encrypted zip file */
-	FG_BIT1		= 0002,
-	FG_BIT2		= 0004,
-	FG_DESC		= 0010	/* zip file with data descriptor */
-};
-enum fg_flags	f_gflag;	/* zip general flag */
-	enum of_flags {
-	OF_ZIP64	= 0001	/* is a zip64 archive entry */
-};
-enum of_flags	f_oflag;	/* other flags */
+	enum cmethod	f_cmethod;	/* zip compression method */
+	/* Anonymous enums scoped to struct prevent global namespace pollution */
+	enum {
+		FG_CRYPT	= 0001,	/* encrypted zip file */
+		FG_BIT1		= 0002,
+		FG_BIT2		= 0004,
+		FG_DESC		= 0010	/* zip file with data descriptor */
+	}		f_gflag;	/* zip general flag */
+	enum {
+		OF_ZIP64	= 0001	/* is a zip64 archive entry */
+	}		f_oflag;	/* other flags */
 };
 
 /*
@@ -177,36 +180,32 @@ extern int		printsev;
 extern char		*progname;
 extern struct glist	*patterns;
 
-enum pax_e {			/* type of pax command this is */
-
+/* Clearer enum name following modern C conventions */
+enum pax_type {			/* type of pax command this is */
 	PAX_TYPE_CPIO		= 0,	/* not a pax command */
-
 	PAX_TYPE_PAX1992	= 1,	/* POSIX.2 pax command */
-
 	PAX_TYPE_PAX2001	= 2	/* POSIX.1-2001 pax command */
-
 };
 
-extern enum pax_e pax;
-
-extern int			pax_dflag;
-
-extern int			pax_kflag;
+extern enum pax_type pax;
+extern int		pax_dflag;
+extern int		pax_kflag;
 extern int		pax_nflag;
 extern int		pax_sflag;
 extern int		pax_uflag;
 extern int		pax_Xflag;
 
-typedef enum {
+/* Direct enum usage preferred over typedef in modern C */
+enum pax_preserve_type {
 	PAX_P_NONE	= 0000,
 	PAX_P_ATIME	= 0001,
 	PAX_P_MTIME	= 0004,
 	PAX_P_OWNER	= 0010,
 	PAX_P_MODE	= 0020,
 	PAX_P_EVERY	= 0400
-} pax_preserve_t;
+};
 
-extern pax_preserve_t pax_preserve;
+extern enum pax_preserve_type pax_preserve;
 
 extern size_t		(*ofiles)(char **, size_t *);
 extern void		(*prtime)(time_t);
