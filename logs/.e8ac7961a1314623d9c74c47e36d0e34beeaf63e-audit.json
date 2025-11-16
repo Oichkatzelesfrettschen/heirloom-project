@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/home/eirikr/Playground/heirloom-project/logs/.e8ac7961a1314623d9c74c47e36d0e34beeaf63e-audit.json",
+    "files": [
+        {
+            "date": 1763253408854,
+            "name": "/home/eirikr/Playground/heirloom-project/logs/mcp-puppeteer-2025-11-15.log",
+            "hash": "a7344e46597caf4b8d5a109ef7af9bf062d5d12b0b7d8b0ce7ace23dc3915229"
+        }
+    ],
+    "hashType": "sha256"
+}

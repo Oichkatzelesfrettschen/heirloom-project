@@ -97,6 +97,9 @@
 #include <sys/sysmacros.h>
 #endif	/* _AIX */
 
+#ifdef __linux__
+#include <sys/sysmacros.h> // For major/minor on modern Linux
+#endif
 #if !defined (major) && !defined (__G__)
 #include <sys/mkdev.h>
 #endif	/* !major */
@@ -830,6 +833,10 @@ int			printsev;	/* print message severity strings */
 static int		compressed_bar;	/* this is a compressed bar archive */
 static int		formatforced;	/* -k -i -Hfmt forces a format */
 static long long	lineno;		/* input line number */
+
+fmttype_t fmttype;
+enum pax_e pax;
+pax_preserve_t pax_preserve;
 
 int			pax_dflag;	/* directory matches only itself */
 int			pax_kflag;	/* do not overwrite files */

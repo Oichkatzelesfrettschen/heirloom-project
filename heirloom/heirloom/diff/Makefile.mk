@@ -1,7 +1,7 @@
 all: diff diffh
 
-diff: diff.o diffdir.o diffreg.o diffver.o
-	$(LD) $(LDFLAGS) diff.o diffdir.o diffreg.o diffver.o $(LCOMMON) $(LWCHAR) $(LIBS) -o diff
+diff: diff.o diffdir.o diffreg.o diffver.o globals.o
+	$(LD) $(LDFLAGS) diff.o diffdir.o diffreg.o diffver.o globals.o $(LCOMMON) $(LWCHAR) $(LIBS) -o diff
 
 diff.o: diff.c
 	$(CC) $(CFLAGS2) $(CPPFLAGS) $(XO6FL) $(LARGEF) $(IWCHAR) $(ICOMMON) -DDIFFH='"$(DEFLIB)/diffh"' -c diff.c
@@ -14,6 +14,9 @@ diffreg.o: diffreg.c
 
 diffver.o: diffver.c
 	$(CC) $(CFLAGS2) $(CPPFLAGS) $(XO6FL) $(LARGEF) $(IWCHAR) $(ICOMMON) -c diffver.c
+
+globals.o: globals.c
+	$(CC) $(CFLAGS2) $(CPPFLAGS) $(XO6FL) $(LARGEF) $(IWCHAR) $(ICOMMON) -c globals.c
 
 diffh: diffh.o
 	$(LD) $(LDFLAGS) diffh.o $(LCOMMON) $(LWCHAR) $(LIBS) -o diffh
@@ -29,8 +32,9 @@ install: all
 	$(MANINST) -c -m 644 diff.1 $(ROOT)$(MANDIR)/man1/diff.1
 
 clean:
-	rm -f diff diff.o diffdir.o diffreg.o diffver.o diffh diffh.o core log *~
+	rm -f diff diff.o diffdir.o diffreg.o diffver.o globals.o diffh diffh.o core log *~
 
 diff.o: diff.h
 diffdir.o: diff.h
 diffreg.o: diff.h
+globals.o: diff.h

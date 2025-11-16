@@ -1,0 +1,34 @@
+#include "diff.h"
+
+int	opt;
+int	aflag;
+int	tflag;
+int	pflag;
+int	hflag;
+int	bflag;
+int	wflag;
+int	iflag;
+int	Bflag;
+int	lflag;
+int	rflag;
+int	sflag;
+int	Nflag;
+const char	*start;
+struct xclusion	*xflag;
+int	wantelses;
+char	*ifdef1;
+char	*ifdef2;
+char	*endifname;
+int	inifdef;
+int	context;
+int	status;
+int	anychange;
+char	*tempfile1;
+char	*tempfile2;
+char	**diffargv;
+int	recdepth;
+jmp_buf	recenv;
+struct stackblk	*curstack;
+char	*file1, *file2, *efile1, *efile2;
+struct	stat stb1, stb2;
+int	mb_cur_max;

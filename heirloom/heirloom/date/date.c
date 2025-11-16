@@ -45,8 +45,9 @@ static const char sccsid[] USED = "@(#)date.sl	1.27 (gritter) 12/16/07";
 #include	<errno.h>
 #include	<libgen.h>
 #include	<time.h>
+#include	<sys/time.h>
 #include	<locale.h>
-#include	<utmpx.h>
+#include	"_utmpx.h"
 #include	<langinfo.h>
 
 static unsigned	errcnt;			/* count of errors */
@@ -164,7 +165,7 @@ settime(char *op)
 	if ((newtime = timeop(op)) == (time_t)-1)
 		badconv();
 	gettimeofday(&before.ut_tv, NULL);
-	if (stime(&newtime) < 0) {
+	if (settimeofday(&(const struct timeval){ .tv_sec = newtime, .tv_usec = 0 }, NULL) < 0) {
 		fprintf(stderr, "%s: no permission\n", progname);
 		exit(1);
 	}
